@@ -1,0 +1,42 @@
+/* Responsive */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 240px;
+    }
+    
+    .auth-card {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .auth-card {
+        height: auto;
+        min-height: 600px;
+    }
+    
+    .login-form,
+    .register-form {
+        padding-right: 0;
+    }
+    
+    .auth-decoration {
+        display: none;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+}

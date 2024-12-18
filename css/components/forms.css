@@ -1,0 +1,350 @@
+/* Variables */
+:root {
+    --input-border: #e2e8f0;
+    --input-border-focus: var(--primary-color);
+    --input-shadow: rgba(67, 97, 238, 0.1);
+    --label-color: #718096;
+    --label-color-focus: var(--primary-color);
+}
+
+/* Grupos de formulario */
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+/* Estilos base para inputs */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: white;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+/* Ajustes específicos para textarea */
+.form-group textarea {
+    height: auto;
+    min-height: 120px;
+    padding: 16px;
+    resize: vertical;
+}
+
+/* Estados de focus */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 4px var(--input-shadow);
+}
+
+/* Estilo para labels flotantes */
+.form-group:not(.checkbox-group) {
+    position: relative;
+}
+
+.form-group:not(.checkbox-group) input,
+.form-group:not(.checkbox-group) select,
+.form-group:not(.checkbox-group) textarea {
+    width: 100%;
+    height: 48px;
+    padding: 16px;
+    font-size: 1rem;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    background: transparent;
+    transition: border-color 0.3s ease;
+}
+
+.form-group:not(.checkbox-group)::after {
+    content: attr(data-placeholder);
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--label-color);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    background: white;
+    padding: 0 5px;
+    font-size: 1rem;
+    z-index: 1;
+}
+
+.form-group:not(.checkbox-group) input:focus::placeholder,
+.form-group:not(.checkbox-group) select:focus::placeholder,
+.form-group:not(.checkbox-group) textarea:focus::placeholder {
+    color: transparent;
+}
+
+.form-group:not(.checkbox-group) input:focus + label,
+.form-group:not(.checkbox-group) input:not(:placeholder-shown) + label,
+.form-group:not(.checkbox-group) select:focus + label,
+.form-group:not(.checkbox-group) select:not(:placeholder-shown) + label,
+.form-group:not(.checkbox-group) textarea:focus + label,
+.form-group:not(.checkbox-group) textarea:not(:placeholder-shown) + label {
+    top: 0;
+    transform: translateY(-50%) scale(0.85);
+    color: var(--label-color-focus);
+    background: white;
+    font-weight: 500;
+    z-index: 3;
+}
+
+.form-group:not(.checkbox-group) input:focus::after,
+.form-group:not(.checkbox-group) input:not(:placeholder-shown)::after,
+.form-group:not(.checkbox-group) select:focus::after,
+.form-group:not(.checkbox-group) select:not(:placeholder-shown)::after,
+.form-group:not(.checkbox-group) textarea:focus::after,
+.form-group:not(.checkbox-group) textarea:not(:placeholder-shown)::after {
+    top: 0;
+    transform: translateY(-50%) scale(0.85);
+    color: var(--label-color-focus);
+}
+
+/* Campo de contraseña */
+.password-field {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--label-color);
+    transition: color 0.3s ease;
+    z-index: 3;
+}
+
+.toggle-password:hover {
+    color: var(--label-color-focus);
+}
+
+/* Botones */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+}
+
+/* Formularios del Dashboard */
+.dashboard-form {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.form-grid .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Checkbox personalizado */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+}
+
+.checkbox-group label {
+    color: var(--label-color);
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+}
+
+/* Formulario de productos */
+.product-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.product-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.product-form .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Por defecto, estos campos ocuparán todo el ancho */
+.product-form .form-group:has(textarea),
+.product-form .form-group:has(select),
+.product-form .form-group:has([type="file"]) {
+    grid-column: 1 / -1;
+}
+
+/* Grupos de formulario */
+.form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+/* Estilos específicos para textarea */
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Estilos para el campo de archivo */
+.form-group input[type="file"] {
+    padding: 0.5rem;
+    border: 2px dashed #e2e8f0;
+    background-color: #f8fafc;
+    cursor: pointer;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: var(--primary-color);
+    background-color: #edf2f7;
+}
+
+.form-group small {
+    color: #718096;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Botones */
+.btn-container {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #4a5568;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: var(--primary-color);
+}
+
+/* Mensajes de error y éxito */
+.alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+    background-color: #fde8e8;
+    border: 1px solid #f8b4b4;
+    color: #9b1c1c;
+}
+
+.alert-success {
+    background-color: #def7ec;
+    border: 1px solid #bcf0da;
+    color: #03543f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-form {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group {
+        grid-column: 1 / -1 !important;
+    }
+
+    .btn-container {
+        flex-direction: column;
+    }
+
+    .btn-container .btn-primary {
+        width: 100%;
+    }
+}
+
+/* Contenedor de formulario */
+.form-container {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 900px;
+    margin: 0 auto;
+}
