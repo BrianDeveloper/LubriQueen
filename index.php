@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Estilos para el botón de mostrar/ocultar contraseña */
+        .password-field {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #495057;
+        }
+
+        .toggle-password.active {
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
@@ -15,7 +39,7 @@
                 <!-- Formulario de Login -->
                 <form class="auth-form login-form" action="auth/login.php" method="POST">
                     <div class="auth-form-content">
-                        <h2>Bienvenido de nuevo</h2>
+                        <h2>Bienvenido</h2>
                         
                         <?php
                         session_start();
@@ -38,7 +62,7 @@
                             <label for="password">Contraseña</label>
                             <i class="toggle-password fas fa-eye" title="Mostrar contraseña"></i>
                         </div>
-                        <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                        <button type="submit" class="btn-primary">Acceder</button>
                         <div class="switch-form">
                             <p>¿No tienes una cuenta? <a href="#" class="switch-to-register">Regístrate aquí</a></p>
                         </div>
@@ -79,7 +103,7 @@
             <div class="auth-decoration">
                 <div>
                     <h3>Lubri Queen 77</h3>
-                    <p>Sistema de gestión de inventario</p>
+                    <p>Inicio de Sesión</p>
                 </div>
             </div>
         </div>
@@ -98,16 +122,31 @@
         });
 
         // Script para mostrar/ocultar contraseña
-        document.querySelectorAll('.toggle-password').forEach(function(toggle) {
-            toggle.addEventListener('click', function() {
-                const input = this.previousElementSibling;
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    this.classList.replace('fa-eye', 'fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    this.classList.replace('fa-eye-slash', 'fa-eye');
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordToggles = document.querySelectorAll('.toggle-password');
+            
+            passwordToggles.forEach(function(toggle) {
+                toggle.addEventListener('click', function() {
+                    // Encontrar el input de contraseña que está dentro del mismo form-group
+                    const passwordField = this.parentElement.querySelector('input[type="password"], input[type="text"]');
+                    
+                    if (passwordField) {
+                        // Cambiar el tipo de input
+                        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordField.setAttribute('type', type);
+                        
+                        // Actualizar el icono y su estado
+                        if (type === 'text') {
+                            this.classList.remove('fa-eye');
+                            this.classList.add('fa-eye-slash', 'active');
+                            this.setAttribute('title', 'Ocultar contraseña');
+                        } else {
+                            this.classList.remove('fa-eye-slash', 'active');
+                            this.classList.add('fa-eye');
+                            this.setAttribute('title', 'Mostrar contraseña');
+                        }
+                    }
+                });
             });
         });
     </script>

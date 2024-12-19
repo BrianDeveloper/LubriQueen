@@ -6,14 +6,29 @@
 
 /* Variables globales */
 :root {
-    --primary-color: #4361ee;
-    --secondary-color: #3f37c9;
-    --success-color: #4cc9f0;
-    --danger-color: #f72585;
-    --warning-color: #f9c74f;
-    --info-color: #4895ef;
-    --light-color: #f8f9fa;
-    --dark-color: #212529;
+    /* Paleta de colores principal */
+    --yellow-light: #f7e35e;
+    --yellow: #fbd213;
+    --orange: #f4a118;
+    --red: #cd1a36;
+    --pink: #dc5c8c;
+    --beige: #f2ece6;
+    --olive: #a49434;
+    --brown: #b87947;
+    --gray: #747474;
+    --black: #141312;
+
+    /* Variables funcionales */
+    --primary-color: var(--orange);
+    --secondary-color: var(--yellow);
+    --accent-color: var(--red);
+    --background-color: var(--beige);
+    --text-color: var(--black);
+    --text-light: var(--gray);
+    --border-color: var(--gray);
+    --success-color: var(--olive);
+    --warning-color: var(--yellow);
+    --danger-color: var(--red);
     --sidebar-width: 280px;
     --header-height: 70px;
     --border-radius: 12px;
@@ -30,8 +45,8 @@
 body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     min-height: 100vh;
 }
 
@@ -42,7 +57,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+    background: linear-gradient(135deg, var(--yellow-light) 0%, var(--orange) 100%);
     perspective: 1000px;
 }
 
@@ -101,7 +116,7 @@ body {
 
 .auth-form h2 {
     margin-bottom: 30px;
-    color: var(--dark-color);
+    color: var(--text-color);
     text-align: center;
     font-size: 2rem;
     font-weight: 600;
@@ -120,7 +135,7 @@ body {
 }
 
 .auth-form .switch-form a:hover {
-    color: var(--secondary-color);
+    color: var(--accent-color);
     text-decoration: underline;
 }
 
@@ -131,7 +146,7 @@ body {
     right: 0;
     width: 40%;
     height: 100%;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -160,7 +175,7 @@ body {
 .form-group input {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -199,21 +214,35 @@ body {
 
 .toggle-password {
     position: absolute;
-    right: 16px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #718096;
+    color: #6c757d;
     transition: color 0.3s ease;
+    z-index: 10;
+    padding: 5px;
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
 .toggle-password:hover {
-    color: var(--primary-color);
+    color: #495057;
+}
+
+.toggle-password.active {
+    color: #007bff;
+}
+
+.password-field input[type="password"],
+.password-field input[type="text"] {
+    padding-right: 35px !important;
 }
 
 /* Botones */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background-color: var(--primary-color);
     color: white;
     padding: 12px 24px;
     border-radius: 10px;
@@ -234,13 +263,13 @@ body {
 .admin-container {
     display: flex;
     min-height: 100vh;
-    background-color: #f0f2f5;
+    background-color: var(--background-color);
 }
 
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: linear-gradient(180deg, var(--dark-color) 0%, #2d3748 100%);
+    background: linear-gradient(180deg, var(--text-color) 0%, #2d3748 100%);
     color: white;
     position: fixed;
     height: 100vh;
@@ -355,7 +384,7 @@ table {
 th, td {
     padding: 16px 20px;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 th {
@@ -383,15 +412,15 @@ tr:hover {
 }
 
 .alert-success {
-    background-color: #def7ec;
-    border-color: #bcf0da;
-    color: #03543f;
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
 }
 
 .alert-danger {
-    background-color: #fde8e8;
-    border-color: #f8b4b4;
-    color: #9b1c1c;
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
 }
 
 /* Responsive */

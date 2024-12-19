@@ -219,10 +219,29 @@ try {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            margin-left: 10px;
         }
 
-        .export-btn:hover {
-            background-color: #218838;
+        .export-btn.excel {
+            background-color: #217346;
+        }
+
+        .export-btn.excel:hover {
+            background-color: #1e6339;
+        }
+
+        .export-btn.pdf {
+            background-color: #dc3545;
+        }
+
+        .export-btn.pdf:hover {
+            background-color: #c82333;
+        }
+
+        .export-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn-primary {
@@ -397,18 +416,31 @@ try {
 
                 <div class="report-actions">
                     <h2>Resultados</h2>
-                    <button type="button" class="export-btn" onclick="exportarPDF()">
-                        <i class="fas fa-file-pdf"></i> Exportar a PDF
-                    </button>
+                    <div class="export-actions">
+                        <button type="button" class="export-btn pdf" onclick="exportarPDF()">
+                            <i class="fas fa-file-pdf"></i> Exportar a PDF
+                        </button>
+                        <button type="button" class="export-btn excel" onclick="exportarExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar a Excel
+                        </button>
+                    </div>
                 </div>
 
                 <script>
                 function exportarPDF() {
+                    exportarReporte('generar_pdf.php');
+                }
+
+                function exportarExcel() {
+                    exportarReporte('generar_excel.php');
+                }
+
+                function exportarReporte(url) {
                     // Crear un formulario temporal
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = 'generar_pdf.php';
-                    form.target = '_blank'; // Abrir en nueva pestaña
+                    form.action = url;
+                    form.target = '_blank';
 
                     // Agregar los filtros actuales
                     const inputs = {

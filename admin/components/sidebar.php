@@ -16,8 +16,8 @@
         <a href="/LubriQueen/admin/reports/index.php" <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['PHP_SELF'], '/reports/') !== false ? 'class="active"' : ''; ?>>
             <i class="fas fa-chart-bar"></i> Reportes
         </a>
-        <a href="/LubriQueen/admin/users.php" <?php echo basename($_SERVER['PHP_SELF']) == 'users.php' ? 'class="active"' : ''; ?>>
-            <i class="fas fa-users"></i> Usuarios
+        <a href="/LubriQueen/admin/sales.php" <?php echo basename($_SERVER['PHP_SELF']) == 'sales.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-shopping-cart"></i> Clientes/Compras
         </a>
         <a href="/LubriQueen/auth/logout.php" class="logout-link">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
