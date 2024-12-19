@@ -92,7 +92,7 @@ try {
 
 // Obtener todas las categorías
 try {
-    $stmt = $conn->query("SELECT * FROM categorias ORDER BY nombre");
+    $stmt = $conn->query("SELECT * FROM categorias ORDER BY id ASC");
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $message = "Error al obtener las categorías: " . $e->getMessage();
@@ -109,32 +109,240 @@ try {
     <title>Gestión de Categorías - Lubri Queen 77</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #666;
+        }
+        
+        .floating {
+            position: relative;
+        }
+        
+        .floating label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: #666;
+            transition: 0.2s;
+        }
+        
+        .floating input:focus + label, .floating input:not(:placeholder-shown) + label {
+            top: -15px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .floating textarea:focus + label, .floating textarea:not(:placeholder-shown) + label {
+            top: -15px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        /* Estilos de la tabla */
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .inventory-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .inventory-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            color: #212529;
+        }
+
+        .inventory-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Estilos de los botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+        }
+
+        .btn-icon.edit {
+            background-color: #0d6efd;
+        }
+
+        .btn-icon.edit:hover {
+            background-color: #0b5ed7;
+        }
+
+        .btn-icon.delete {
+            background-color: #dc3545;
+        }
+
+        .btn-icon.delete:hover {
+            background-color: #bb2d3b;
+        }
+
+        .btn-icon i {
+            font-size: 14px;
+        }
+
+        /* Estilos para los badges */
+        .badge {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background-color: #198754;
+            color: white;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Ajustes de columnas */
+        .column-id {
+            width: 80px;
+        }
+
+        .column-nombre {
+            min-width: 200px;
+        }
+
+        .column-descripcion {
+            min-width: 300px;
+        }
+
+        .column-productos {
+            width: 120px;
+        }
+
+        .column-acciones {
+            width: 100px;
+        }
+
+        /* Estilos para las alertas */
+        .alert {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .alert-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background-color: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            transform-origin: left;
+            animation: progress 3s linear forwards;
+        }
+
+        @keyframes progress {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        .alert.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Lubri Queen 77</h2>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="../dashboard.php">
-                    <i class="fas fa-home"></i> Dashboard
-                </a>
-                <a href="index.php">
-                    <i class="fas fa-boxes"></i> Inventario
-                </a>
-                <a href="categories.php" class="active">
-                    <i class="fas fa-tags"></i> Categorías
-                </a>
-                <a href="../users.php">
-                    <i class="fas fa-users"></i> Usuarios
-                </a>
-                <a href="../../auth/logout.php" class="logout-link">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </a>
-            </nav>
-        </div>
+        <?php include '../components/sidebar.php'; ?>
 
         <!-- Main Content -->
         <div class="main-content">
@@ -153,14 +361,17 @@ try {
                         </span>
                     </div>
                 </div>
-                <button class="add-btn" onclick="showModal('create')">
-                    <i class="fas fa-plus"></i> Nueva Categoría
-                </button>
+                <div class="btn-container">
+                    <a href="#" class="add-btn" onclick="showModal('create')">
+                        <i class="fas fa-plus"></i> Nueva Categoría
+                    </a>
+                </div>
             </header>
 
             <?php if ($message): ?>
                 <div class="alert alert-<?php echo $messageType; ?>">
                     <?php echo $message; ?>
+                    <div class="progress-bar"></div>
                 </div>
             <?php endif; ?>
 
@@ -170,19 +381,21 @@ try {
                     <div class="no-results">
                         <i class="fas fa-tag"></i>
                         <p>No hay categorías registradas.</p>
-                        <button class="btn-primary" onclick="showModal('create')">
-                            Crear Primera Categoría
-                        </button>
+                        <div class="btn-container">
+                            <a href="#" class="btn-primary" onclick="showModal('create')">
+                                Crear Primera Categoría
+                            </a>
+                        </div>
                     </div>
                 <?php else: ?>
-                    <table>
+                    <table class="inventory-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Productos</th>
-                                <th>Acciones</th>
+                                <th class="column-id">ID</th>
+                                <th class="column-nombre">Nombre</th>
+                                <th class="column-descripcion">Descripción</th>
+                                <th class="column-productos">Productos</th>
+                                <th class="column-acciones">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -193,27 +406,27 @@ try {
                                 $num_productos = $stmt->fetchColumn();
                             ?>
                                 <tr>
-                                    <td><?php echo $categoria['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($categoria['nombre']); ?></td>
-                                    <td><?php echo htmlspecialchars($categoria['descripcion'] ?? ''); ?></td>
-                                    <td>
+                                    <td class="column-id"><?php echo $categoria['id']; ?></td>
+                                    <td class="column-nombre"><?php echo htmlspecialchars($categoria['nombre']); ?></td>
+                                    <td class="column-descripcion"><?php echo htmlspecialchars($categoria['descripcion'] ?? ''); ?></td>
+                                    <td class="column-productos">
                                         <span class="badge <?php echo $num_productos > 0 ? 'badge-success' : 'badge-secondary'; ?>">
-                                            <?php echo $num_productos; ?>
+                                            <?php echo $num_productos; ?> productos
                                         </span>
                                     </td>
-                                    <td class="actions">
-                                        <button class="btn-icon edit" onclick="showModal('edit', <?php echo htmlspecialchars(json_encode($categoria)); ?>)" title="Editar categoría">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <?php if ($num_productos == 0): ?>
-                                            <button class="btn-icon delete" onclick="deleteCategory(<?php echo $categoria['id']; ?>, '<?php echo htmlspecialchars($categoria['nombre']); ?>')" title="Eliminar categoría">
-                                                <i class="fas fa-trash"></i>
+                                    <td class="column-acciones">
+                                        <div class="action-buttons">
+                                            <button onclick="showModal('edit', <?php echo htmlspecialchars(json_encode($categoria)); ?>)" 
+                                                    class="btn-icon edit" title="Editar">
+                                                <i class="fas fa-edit"></i>
                                             </button>
-                                        <?php else: ?>
-                                            <button class="btn-icon delete disabled" title="No se puede eliminar - tiene productos asociados">
-                                                <i class="fas fa-trash"></i>
+                                            <?php if ($num_productos == 0): ?>
+                                            <button onclick="deleteCategory(<?php echo $categoria['id']; ?>)" 
+                                                    class="btn-icon delete" title="Eliminar">
+                                                <i class="fas fa-trash-alt"></i>
                                             </button>
-                                        <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -231,21 +444,19 @@ try {
                         <input type="hidden" name="action" id="formAction" value="create">
                         <input type="hidden" name="id" id="categoryId">
                         
-                        <div class="form-group">
-                            <label for="nombre">Nombre de la Categoría <span class="required">*</span></label>
-                            <input type="text" id="nombre" name="nombre" required 
-                                   placeholder="Ingrese el nombre de la categoría">
+                        <div class="form-group floating">
+                            <input type="text" id="nombre" name="nombre" required class="form-control" placeholder="Nombre de la categoría *">
+                            <label for="nombre">Nombre de la categoría *</label>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="descripcion">Descripción de la Categoría</label>
-                            <textarea id="descripcion" name="descripcion" rows="4"
-                                    placeholder="Ingrese una descripción detallada de la categoría"></textarea>
+                        <div class="form-group floating">
+                            <textarea id="descripcion" name="descripcion" class="form-control" placeholder="Descripción de la categoría"></textarea>
+                            <label for="descripcion">Descripción de la categoría</label>
                         </div>
                         
-                        <div class="form-actions">
+                        <div class="form-group button-stack">
+                            <button type="submit" class="btn-primary">Guardar</button>
                             <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                            <button type="submit" class="btn-primary" id="submitBtn">Guardar Categoría</button>
                         </div>
                     </form>
                 </div>
@@ -263,45 +474,45 @@ try {
         const descripcionInput = document.getElementById('descripcion');
 
         function showModal(action, categoria = null) {
-            if (action === 'edit' && categoria) {
+            modal.style.display = 'block';
+            form.reset();
+            
+            if (action === 'create') {
+                modalTitle.textContent = 'Nueva Categoría';
+                formAction.value = 'create';
+                categoryId.value = '';
+            } else if (action === 'edit') {
                 modalTitle.textContent = 'Editar Categoría';
                 formAction.value = 'update';
                 categoryId.value = categoria.id;
                 nombreInput.value = categoria.nombre;
                 descripcionInput.value = categoria.descripcion || '';
-            } else {
-                modalTitle.textContent = 'Nueva Categoría';
-                formAction.value = 'create';
-                categoryId.value = '';
-                form.reset();
             }
-            modal.style.display = 'block';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-            nombreInput.focus();
         }
 
         function closeModal() {
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                form.reset();
-            }, 300);
+            modal.style.display = 'none';
+            form.reset();
         }
 
         function validateForm() {
-            const nombre = nombreInput.value.trim();
+            const nombre = document.getElementById('nombre').value.trim();
             if (!nombre) {
                 alert('Por favor, ingrese un nombre para la categoría');
-                nombreInput.focus();
                 return false;
             }
             return true;
         }
 
-        function deleteCategory(id, nombre) {
-            if (confirm(`¿Está seguro de que desea eliminar la categoría "${nombre}"?`)) {
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function deleteCategory(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.innerHTML = `
@@ -313,19 +524,26 @@ try {
             }
         }
 
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
+        function setupAlertDismissal() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                // Agregar barra de progreso
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                alert.appendChild(progressBar);
+
+                // Configurar el temporizador para eliminar la alerta
+                setTimeout(() => {
+                    alert.classList.add('fade-out');
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+                }, 3000);
+            });
         }
 
-        // Cerrar modal con la tecla Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && modal.style.display === 'block') {
-                closeModal();
-            }
-        });
+        // Llamar a la función cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', setupAlertDismissal);
     </script>
 </body>
 </html>
