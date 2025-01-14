@@ -3,6 +3,7 @@
 @import 'components/forms.css';
 @import 'components/dashboard.css';
 @import 'components/responsive.css';
+@import 'components/client.css';
 
 /* Variables globales */
 :root {

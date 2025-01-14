@@ -34,50 +34,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($errors)) {
         try {
-            $stmt = $conn->prepare("SELECT id, nombre, email, password, estado, rol FROM usuarios WHERE email = ?");
+            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Para depuración
-            error_log("Intento de login - Email: " . $email);
-            error_log("Usuario encontrado: " . ($user ? "Sí" : "No"));
-            
             if ($user && password_verify($password, $user['password'])) {
-                error_log("Verificación de contraseña exitosa");
-                
-                if (!$user['estado']) {
-                    $errors[] = "Su cuenta está desactivada. Por favor contacte al administrador.";
+                if ($user['estado'] != 1) {
+                    $_SESSION['login_error'] = "Su cuenta está desactivada. Por favor contacte al administrador.";
+                    header("Location: ../login.php");
+                    exit();
+                }
+
+                // Login exitoso
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['nombre'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_role'] = $user['rol'];
+
+                // Redirigir según el rol
+                if ($user['rol'] === 'admin') {
+                    header("Location: ../admin/dashboard.php");
+                    exit();
                 } else {
-                    // Login exitoso
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['nombre'];
-                    $_SESSION['user_role'] = $user['rol'];
-                    
-                    // Registrar el último acceso
-                    $stmt = $conn->prepare("UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?");
-                    $stmt->execute([$user['id']]);
-                    
-                    // Redirigir según el rol
-                    $redirect = $user['rol'] === 'admin' ? '../admin/dashboard.php' : '../dashboard.php';
-                    header("Location: " . $redirect);
+                    header("Location: ../client/dashboard.php");
                     exit();
                 }
             } else {
-                error_log("Verificación de contraseña fallida");
-                $errors[] = "Credenciales inválidas";
+                $_SESSION['login_error'] = "Credenciales inválidas";
+                header("Location: ../login.php");
+                exit();
             }
-        } catch(PDOException $e) {
-            error_log("Error en login: " . $e->getMessage());
-            $errors[] = "Error en el servidor. Por favor intente más tarde.";
+        } catch (PDOException $e) {
+            $_SESSION['login_error'] = "Error al procesar la solicitud: " . $e->getMessage();
+            header("Location: ../login.php");
+            exit();
         }
-    }
-    
-    if (!empty($errors)) {
-        $_SESSION['login_errors'] = $errors;
-        header("Location: ../index.php");
+    } else {
+        $_SESSION['login_error'] = implode("<br>", $errors);
+        header("Location: ../login.php");
         exit();
     }
 } else {
-    header("Location: ../index.php");
+    header("Location: ../login.php");
     exit();
 }
+?>

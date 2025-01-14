@@ -1,0 +1,113 @@
+/* Estilos principales compartidos */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Variables globales */
+:root {
+    --primary-color: #dc3545;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --border-radius: 10px;
+    --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos base */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Botones personalizados */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Contenedor principal */
+.main-content {
+    min-height: calc(100vh - 60px);
+    padding-bottom: 2rem;
+}
+
+/* Utilidades */
+.shadow-sm {
+    box-shadow: var(--box-shadow) !important;
+}
+
+.rounded {
+    border-radius: var(--border-radius) !important;
+}
+
+/* Animaciones */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Mensajes de alerta personalizados */
+.alert {
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Ajustes responsivos globales */
+@media (max-width: 991.98px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}

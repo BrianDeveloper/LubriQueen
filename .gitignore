@@ -1,0 +1,12 @@
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+*.log
+vendor/
+node_modules/
+.vscode/
+.idea/
+*.cache

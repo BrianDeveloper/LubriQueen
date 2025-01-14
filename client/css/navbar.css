@@ -1,0 +1,67 @@
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar-brand i {
+    color: #dc3545;
+    margin-right: 8px;
+}
+
+.nav-link {
+    color: #666;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #dc3545;
+}
+
+.nav-link.active {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    height: 2px;
+    background-color: #dc3545;
+}
+
+.cart-count {
+    margin-left: 8px;
+    background-color: #dc3545;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 0.8em;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        padding: 1rem 0;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 0;
+    }
+    
+    .nav-link.active::after {
+        left: 0;
+        right: 0;
+    }
+}

@@ -35,17 +35,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $fileInfo = pathinfo($_FILES['imagen']['name']);
                         $extension = strtolower($fileInfo['extension']);
                         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                        $maxFileSize = 2 * 1024 * 1024; // 2MB en bytes
+
+                        if ($_FILES['imagen']['size'] > $maxFileSize) {
+                            $message = "El archivo es demasiado grande. El tamaño máximo permitido es 2MB.";
+                            $messageType = "error";
+                            break;
+                        }
 
                         if (in_array($extension, $allowedExtensions)) {
                             $imagen = uniqid() . '.' . $extension;
                             $uploadFile = $uploadDir . $imagen;
 
-                            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $uploadFile)) {
-                                // Imagen subida exitosamente
+                            // Procesar y redimensionar la imagen
+                            list($width, $height) = getimagesize($_FILES['imagen']['tmp_name']);
+                            $maxWidth = 800;
+                            $maxHeight = 800;
+
+                            if ($width > $maxWidth || $height > $maxHeight) {
+                                // Calcular nuevas dimensiones manteniendo proporción
+                                if ($width > $height) {
+                                    $newWidth = $maxWidth;
+                                    $newHeight = ($height / $width) * $maxWidth;
+                                } else {
+                                    $newHeight = $maxHeight;
+                                    $newWidth = ($width / $height) * $maxHeight;
+                                }
+
+                                // Crear nueva imagen
+                                $sourceImage = imagecreatefromstring(file_get_contents($_FILES['imagen']['tmp_name']));
+                                $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+                                // Preservar transparencia para PNG
+                                if ($extension === 'png') {
+                                    imagealphablending($newImage, false);
+                                    imagesavealpha($newImage, true);
+                                }
+
+                                // Redimensionar
+                                imagecopyresampled($newImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+                                // Guardar imagen
+                                switch($extension) {
+                                    case 'jpg':
+                                    case 'jpeg':
+                                        imagejpeg($newImage, $uploadFile, 85);
+                                        break;
+                                    case 'png':
+                                        imagepng($newImage, $uploadFile, 8);
+                                        break;
+                                    case 'gif':
+                                        imagegif($newImage, $uploadFile);
+                                        break;
+                                }
+
+                                imagedestroy($sourceImage);
+                                imagedestroy($newImage);
                             } else {
-                                $message = "Error al subir la imagen";
-                                $messageType = "error";
-                                break;
+                                // Si la imagen es más pequeña que el máximo, solo moverla
+                                move_uploaded_file($_FILES['imagen']['tmp_name'], $uploadFile);
                             }
                         } else {
                             $message = "Tipo de archivo no permitido. Solo se permiten imágenes JPG, JPEG, PNG y GIF";
@@ -92,6 +140,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $fileInfo = pathinfo($_FILES['imagen']['name']);
                             $extension = strtolower($fileInfo['extension']);
                             $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                            $maxFileSize = 2 * 1024 * 1024; // 2MB en bytes
+
+                            if ($_FILES['imagen']['size'] > $maxFileSize) {
+                                $message = "El archivo es demasiado grande. El tamaño máximo permitido es 2MB.";
+                                $messageType = "error";
+                                break;
+                            }
 
                             if (in_array($extension, $allowedExtensions)) {
                                 // Eliminar imagen anterior si existe
@@ -102,10 +157,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $imagen = uniqid() . '.' . $extension;
                                 $uploadFile = $uploadDir . $imagen;
 
-                                if (!move_uploaded_file($_FILES['imagen']['tmp_name'], $uploadFile)) {
-                                    $message = "Error al subir la nueva imagen";
-                                    $messageType = "error";
-                                    break;
+                                // Procesar y redimensionar la imagen
+                                list($width, $height) = getimagesize($_FILES['imagen']['tmp_name']);
+                                $maxWidth = 800;
+                                $maxHeight = 800;
+
+                                if ($width > $maxWidth || $height > $maxHeight) {
+                                    // Calcular nuevas dimensiones manteniendo proporción
+                                    if ($width > $height) {
+                                        $newWidth = $maxWidth;
+                                        $newHeight = ($height / $width) * $maxWidth;
+                                    } else {
+                                        $newHeight = $maxHeight;
+                                        $newWidth = ($width / $height) * $maxHeight;
+                                    }
+
+                                    // Crear nueva imagen
+                                    $sourceImage = imagecreatefromstring(file_get_contents($_FILES['imagen']['tmp_name']));
+                                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+                                    // Preservar transparencia para PNG
+                                    if ($extension === 'png') {
+                                        imagealphablending($newImage, false);
+                                        imagesavealpha($newImage, true);
+                                    }
+
+                                    // Redimensionar
+                                    imagecopyresampled($newImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+                                    // Guardar imagen
+                                    switch($extension) {
+                                        case 'jpg':
+                                        case 'jpeg':
+                                            imagejpeg($newImage, $uploadFile, 85);
+                                            break;
+                                        case 'png':
+                                            imagepng($newImage, $uploadFile, 8);
+                                            break;
+                                        case 'gif':
+                                            imagegif($newImage, $uploadFile);
+                                            break;
+                                    }
+
+                                    imagedestroy($sourceImage);
+                                    imagedestroy($newImage);
+                                } else {
+                                    // Si la imagen es más pequeña que el máximo, solo moverla
+                                    move_uploaded_file($_FILES['imagen']['tmp_name'], $uploadFile);
                                 }
                             } else {
                                 $message = "Tipo de archivo no permitido. Solo se permiten imágenes JPG, JPEG, PNG y GIF";

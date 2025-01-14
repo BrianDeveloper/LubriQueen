@@ -25,10 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insertar nuevo usuario
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password, created_at) VALUES (?, ?, ?, NOW())");
+        $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password, rol, estado) VALUES (?, ?, ?, 'cliente', 1)");
         $stmt->execute([$nombre, $email, $hashed_password]);
 
-        header("Location: ../index.php?success=registration_complete");
+        // Iniciar sesión automáticamente después del registro
+        $user_id = $conn->lastInsertId();
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['user_name'] = $nombre;
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_role'] = 'cliente';
+
+        header("Location: ../client/dashboard.php");
         exit();
     } catch(PDOException $e) {
         header("Location: ../register.php?error=db_error");

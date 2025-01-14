@@ -2,7 +2,7 @@
 
 function checkUserRole($requiredRole) {
     if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== $requiredRole) {
-        header('Location: /LubriQueen/auth/login.php');
+        header('Location: /LubriQueen/login.php');
         exit;
     }
 }
