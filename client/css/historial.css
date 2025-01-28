@@ -1,0 +1,105 @@
+/* Estilos para la página de historial de compras */
+
+/* Lista de pedidos */
+.list-group-item {
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.list-group-item:hover {
+    transform: translateX(5px);
+}
+
+.list-group-item.active {
+    border-left-color: #dc3545;
+    background-color: #dc3545;
+}
+
+/* Detalles del pedido */
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Timeline de estados */
+.timeline {
+    position: relative;
+    padding: 1rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    height: 100%;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 2.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-badge {
+    position: absolute;
+    left: 0.35rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+/* Estados de pedido */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}
+
+/* Imágenes de producto */
+.product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+.product-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 767.98px) {
+    .timeline::before {
+        left: 0.75rem;
+    }
+    
+    .timeline-item {
+        padding-left: 2rem;
+    }
+    
+    .timeline-badge {
+        left: 0.1rem;
+    }
+}
